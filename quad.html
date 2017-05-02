@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="hu">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+	<title>boop</title>
+
+	<script type="text/javascript" charset="utf-8">
+
+		var canvasWidth = 500,
+			canvasHeight;
+
+		var cells = {
+			x: 9,
+			y: 6,
+			width: 0,
+			height: 0,
+			stroke: {
+				style: '#999',
+				width: 1
+			}
+		};
+
+		var pointerOffset = {
+			x: 0,
+			y: 0
+		}
+
+		var gridCanvas, gridCtx;
+
+		// runs before page is initialized
+		function init() {
+
+			// adjust the height
+			canvasHeight = cells.y / cells.x * canvasWidth;
+
+			cells.width = canvasWidth / cells.x;
+			cells.height = canvasHeight / cells.y;
+
+		}
+
+		// runs after page was fully initialized
+		function load() {
+
+			// Document successfully loaded, dom elements initialized
+
+			gridCanvas = document.getElementById('quad-canvas');
+			gridCtx = gridCanvas.getContext('2d');
+
+			gridCanvas.width = canvasWidth;
+			gridCanvas.height = canvasHeight;
+
+			gridCanvas.addEventListener('mousedown', mouseOverAction);
+
+			draw();
+
+
+			var ui = new UICanvas(gridCanvas);
+
+			var rect1 = new ui.Rectangle( 30, 30, 60, 60 );
+			rect1.fillColor = 'red';
+
+			var rect2 = new ui.Rectangle( 60, 60, 60, 60 );
+			rect2.fillColor = 'white';
+
+			var rect3 = new ui.Rectangle( 90, 90, 60, 60 );
+			rect3.fillColor = 'green';
+
+			ui.append(rect1);
+			ui.append(rect2);
+			ui.append(rect3);
+			ui.render();
+
+
+			window.rect = rect1;
+			console.log(rect2)
+		}
+
+		function mouseOverAction(e) {
+		}
+
+		function draw() {
+
+			// draw background
+			gridCtx.beginPath();
+
+			gridCtx.strokeStyle = cells.stroke.style;
+
+			for( var yI = 1; yI < cells.y; yI++ ) {
+				var yPos = yI * cells.height - cells.stroke.width;
+
+				gridCtx.moveTo(0, yPos);
+				gridCtx.lineTo(canvasWidth, yPos);
+				gridCtx.stroke();
+			}
+
+			for( var xI = 1; xI < cells.x; xI++ ) {
+				var xPos = xI * cells.width - cells.stroke.width;
+
+				gridCtx.moveTo(xPos, 0);
+				gridCtx.lineTo(xPos, canvasHeight);
+				gridCtx.stroke();
+			}
+
+			// highlight cells on hover
+
+			// rerender
+		}
+
+		init();
+		window.addEventListener('DOMContentLoaded', load);
+	</script>
+</head>
+<body>
+
+	<canvas id="quad-canvas">
+		No canvas support bitch	
+	</canvas>
+
+	<script type="text/javascript" src="ui-toolset.js"></script>
+</body>
+</html>
